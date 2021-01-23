@@ -69,7 +69,7 @@ int main()
 	Print(IsNumber(1234));
 	Print(IsNumber("Hello"));
 	Print(InstanceOf(name1));
-	Print(Type("Hello"));
+	Print(Type("Hello")); 
 
 	return 0;
 }

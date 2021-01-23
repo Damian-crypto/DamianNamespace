@@ -13,17 +13,7 @@
 #include <functional>
 #include <cctype>
 #include <type_traits>
-
-#define VERSION_OK __cplusplus >= 201103L || __cplusplus >= 199711L
-
-#if VERSION_OK
 #include <array>
-#endif
-
-#if VERSION_OK && __cplusplus > 199711L
-#define RANGES_OK
-#include <ranges>
-#endif
 
 #include "string.h"
 #include "timer.h"
@@ -71,11 +61,7 @@ namespace Damian
 	template<typename T>
 	T Sum(const std::vector<T>& arr)
 	{
-#if RANGES_OK
-		return std::ranges::accumulate(arr, 0.0);
-#else
 		return std::accumulate(arr.begin(), arr.end(), 0.0);
-#endif
 	}
 
 	/* Return sum of all objects in the array
@@ -83,11 +69,7 @@ namespace Damian
 	template<typename T, size_t size>
 	T Sum(const std::array<T, size>& arr)
 	{
-#if RANGES_OK
-		return std::ranges::accumulate(arr, 0.0);
-#else
 		return std::accumulate(arr.begin(), arr.end(), 0.0);
-#endif
 	}
 
 	/* Return sum of all objects in the arr
@@ -108,21 +90,13 @@ namespace Damian
 	template<typename T>
 	void Sort(std::vector<T>& arr)
 	{
-#if RANGES_OK
-		std::ranges::sort(arr);
-#else
 		std::sort(arr.begin(), arr.end());
-#endif
 	}
 
 	template<typename T, size_t size>
 	void Sort(std::array<T, size>& arr)
 	{
-#if RANGES_OK
-		return std::ranges::sort(arr);
-#else
 		return std::sort(arr.begin(), arr.end());
-#endif
 	}
 
 	/* Sorting generic array by non-optimized algorithm
