@@ -1,0 +1,5 @@
+# compiled exe files
+*.exe
+
+# precompiled files
+*.h.gch
