@@ -14,6 +14,7 @@
 #include <cctype>
 #include <type_traits>
 #include <array>
+#include <sstream>
 
 #include "string.h"
 #include "timer.h"
@@ -26,6 +27,20 @@ namespace Damian
 	constexpr char line_delim = '\r';
 #endif
 
+#define D_ASSERT(condition, msg) if(condition)\
+	std::cerr << line_delim << msg << line_delim << std::endl;
+
+	/* Convert generic type to C++ standard string type
+	 * bit explain: this is done by using stringstreams
+	 */
+	template<typename T>
+	std::string ToString(const T& value)
+	{
+		std::ostringstream output;
+		output << value;
+		return output.str();
+	}
+
 	/* bool InstanceOf(const T* object)
 	 * function used to check whether object's base(parent) class is Base type
 	 * returns true if object is derived from Base otherwise false
@@ -37,6 +52,7 @@ namespace Damian
 		return std::is_base_of<Base, T>::value; // T is a pointer
 	}
 
+	// Forward declaration of Print() function
 	template<typename T>
 	void Print(const T& obj);
 
@@ -47,13 +63,10 @@ namespace Damian
 	template<typename T>
 	bool IsNumber(T obj)
 	{
-#if 0
-		std::string temp_Str = static_cast<std::string>(obj);
+		std::string temp_Str(ToString(obj));
 
 		return !temp_Str.empty() && std::find_if(temp_Str.begin(), temp_Str.end(),
 			[](unsigned char c) { return !std::isdigit(c); }) == temp_Str.end();
-#endif
-		return 0;
 	}
 
 	/* Return sum of all objects in the vector
@@ -86,13 +99,16 @@ namespace Damian
 		return sum;
 	}
 
-
+	/* Sort the entire vector with the specified type
+	 */
 	template<typename T>
 	void Sort(std::vector<T>& arr)
 	{
 		std::sort(arr.begin(), arr.end());
 	}
 
+	/* Sort the entire array with the specified type
+	 */
 	template<typename T, size_t size>
 	void Sort(std::array<T, size>& arr)
 	{
@@ -105,20 +121,9 @@ namespace Damian
 	template<typename T>
 	void Sort(int count = 0, T* arr = nullptr)
 	{
-		/*std::function<bool(T, T)> comparison = [](T val1, T val2) { return val1 < val2; };
-		if(IsNumber(arr[0]))
-			comparison = [](T val1, T val2) { return val1 < val2; };
-		else
-		{
-			comparison = [](T val1, T val2) {
-				if(!std::is_base_of<std::string, T>::value)
-				{
-					return String::Compare(std::to_string(val1), std::to_string(val2)) < 0;
-				} else {
-					return val1.compare(val2);
-				}
-			};
-		}
+		std::function<bool(T, T)> comparison = [](T val1, T val2) { return val1 < val2; };
+		if(!IsNumber(arr[0]))
+			comparison = [](T val1, T val2) { return String::Compare(ToString(val1), ToString(val2)) > 0; };
 
 		for(int startIndex = 0; startIndex < count - 1; ++startIndex)
 		{
@@ -132,7 +137,7 @@ namespace Damian
 			}
 
 			std::swap(arr[startIndex], arr[smallIndex]);
-		}*/
+		}
 	}
 
 	/* Returns default name of the type specified
@@ -163,8 +168,8 @@ namespace Damian
 	template<typename T>
 	void Print(int count = 0, T* arr = nullptr)
 	{
-		assert(count != 0 && "Array size could not be 0");
-		assert(arr != nullptr && "Array could not be null");
+		D_ASSERT(count == 0, "ERROR::Array size could not be 0");
+		D_ASSERT(arr == nullptr, "ERROR::Array could not be null");
 
 		std::cout << "{ ";
 		for(int i = 0; i < count; ++i)

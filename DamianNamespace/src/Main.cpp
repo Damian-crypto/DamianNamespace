@@ -69,7 +69,8 @@ int main()
 	Print(IsNumber(1234));
 	Print(IsNumber("Hello"));
 	Print(InstanceOf(name1));
-	Print(Type("Hello")); 
+	Print(Type("Hello"));
+	Print(Math::Distance(Point2D{4, 6}, Point2D{-5, -2}));
 
 	return 0;
 }
