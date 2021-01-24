@@ -124,14 +124,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="headers\functions.h" />
-    <ClInclude Include="headers\math.h" />
-    <ClInclude Include="headers\string.h" />
-    <ClInclude Include="headers\timer.h" />
-    <ClInclude Include="headers\toolkit.h" />
+    <ClInclude Include="HeaderFiles\Functions.h" />
+    <ClInclude Include="HeaderFiles\Math.h" />
+    <ClInclude Include="HeaderFiles\String.h" />
+    <ClInclude Include="HeaderFiles\Timer.h" />
+    <ClInclude Include="HeaderFiles\Toolkit.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
+    <None Include="src\Makefile" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp" />

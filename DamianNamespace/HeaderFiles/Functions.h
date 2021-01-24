@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef DAMIAN_FUNCTIONS_H
 #define DAMIAN_FUNCTIONS_H
 
@@ -16,8 +18,8 @@
 #include <array>
 #include <sstream>
 
-#include "string.h"
-#include "timer.h"
+#include "String.h"
+#include "Timer.h"
 
 namespace Damian
 {
@@ -28,7 +30,9 @@ namespace Damian
 #endif
 
 #define D_ASSERT(condition, msg) if(condition)\
-	std::cerr << line_delim << msg << line_delim << std::endl;
+	std::cerr << line_delim << msg << line_delim << std::endl
+
+#define PRINT_ERR(msg) D_ASSERT(true, msg)
 
 	/* Convert generic type to C++ standard string type
 	 * bit explain: this is done by using stringstreams
@@ -39,6 +43,38 @@ namespace Damian
 		std::ostringstream output;
 		output << value;
 		return output.str();
+	}
+
+	/* Convert generic type to integer type
+	 */
+	template<typename T>
+	int ToInt(const T& value)
+	{
+		return std::atoi(ToString(value).c_str());
+	}
+
+	/* Convert generic type to double type
+	 */
+	template<typename T>
+	double ToDouble(const T& value)
+	{
+		return std::atof(ToString(value).c_str());
+	}
+
+	/* Convert generic type to floating point type
+	 */
+	template<typename T>
+	float ToFloat(const T& value)
+	{
+		return static_cast<float>(std::atof(ToString(value).c_str()));
+	}
+
+	/* Convert generic type to long type
+	 */
+	template<typename T>
+	long ToLong(const T& value)
+	{
+		return std::atol(ToString(value).c_str());
 	}
 
 	/* bool InstanceOf(const T* object)
@@ -91,7 +127,7 @@ namespace Damian
 	T Sum(int count, T* arr)
 	{
 		T sum = 0.0;
-		for(int i = 0; i < count; i++)
+		for (int i = 0; i < count; i++)
 		{
 			sum += arr[i];
 		}
@@ -122,15 +158,15 @@ namespace Damian
 	void Sort(int count = 0, T* arr = nullptr)
 	{
 		std::function<bool(T, T)> comparison = [](T val1, T val2) { return val1 < val2; };
-		if(!IsNumber(arr[0]))
+		if (!IsNumber(arr[0]))
 			comparison = [](T val1, T val2) { return String::Compare(ToString(val1), ToString(val2)) > 0; };
 
-		for(int startIndex = 0; startIndex < count - 1; ++startIndex)
+		for (int startIndex = 0; startIndex < count - 1; ++startIndex)
 		{
 			int smallIndex = startIndex;
-			for(int currentIndex = startIndex + 1; currentIndex < count; ++currentIndex)
+			for (int currentIndex = startIndex + 1; currentIndex < count; ++currentIndex)
 			{
-				if(comparison(arr[startIndex], arr[currentIndex]))
+				if (comparison(arr[startIndex], arr[currentIndex]))
 				{
 					smallIndex = currentIndex;
 				}
@@ -172,10 +208,10 @@ namespace Damian
 		D_ASSERT(arr == nullptr, "ERROR::Array could not be null");
 
 		std::cout << "{ ";
-		for(int i = 0; i < count; ++i)
+		for (int i = 0; i < count; ++i)
 		{
 			std::cout << *(arr + i);
-			if(i < count - 1)
+			if (i < count - 1)
 				std::cout << ", ";
 		}
 		std::cout << " }" << line_delim;

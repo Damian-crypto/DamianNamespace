@@ -1,4 +1,4 @@
-#include "../headers/toolkit.h"
+#include "../HeaderFiles/Toolkit.h"
 
 #include <iostream>
 #include <typeinfo>
@@ -71,6 +71,16 @@ int main()
 	Print(InstanceOf(name1));
 	Print(Type("Hello"));
 	Print(Math::Distance(Point2D{4, 6}, Point2D{-5, -2}));
+	Print(Math::Factorial(5));
+	Print(Math::Permutation(190, 2));
+	Print(ToInt(45.3445));
+	Print(ToFloat(45.3445));
+
+	std::string myName{};
+	String::Join(myName, "\n", std::vector<std::string> { "Damian", "Chamel", "Rodrigo" });
+	Print(myName);
+	String::Insert(myName, 3, "Hello, World!");
+	Print(myName);
 
 	return 0;
 }

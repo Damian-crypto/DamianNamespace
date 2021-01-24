@@ -15,24 +15,25 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="headers\functions.h">
+    <ClInclude Include="HeaderFiles\Functions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="headers\math.h">
+    <ClInclude Include="HeaderFiles\Math.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="headers\string.h">
+    <ClInclude Include="HeaderFiles\String.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="headers\timer.h">
+    <ClInclude Include="HeaderFiles\Timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="headers\toolkit.h">
+    <ClInclude Include="HeaderFiles\Toolkit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
+    <None Include="src\Makefile" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">

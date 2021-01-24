@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef DAMIAN_TOOLKIT_H
 #define DAMIAN_TOOLKIT_H
 
@@ -5,9 +7,10 @@
 #define VERSION_OK __cplusplus >= 201103L || __cplusplus >= 199711L
 
 #if VERSION_OK
-#include "math.h"
-#include "string.h"
-#include "functions.h"
+#include "Math.h"
+#include "String.h"
+#include "Functions.h"
+#include "Timer.h"
 #else
 #error Damian namespace does not work if C++ version is less than 11(201103L)
 #endif

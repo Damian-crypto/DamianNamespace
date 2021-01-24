@@ -1,5 +1,9 @@
+#pragma once
+
 #ifndef DAMIAN_STRING_H
 #define DAMIAN_STRING_H
+
+#include "Functions.h"
 
 #include <string>
 #include <cstring> // strlen
@@ -27,8 +31,11 @@ namespace Damian
 		static void ToLower(std::string& str);
 		static void Concat(std::string& str, int count, ...);
 		static void Concat(std::string& str1, const std::string& str2);
+		static void Join(std::string& str, const char* delimiter, const std::vector<std::string>& strArr);
+		static void Insert(std::string& str, int offset, const std::string& str2);
 		static int IndexOf(const std::string& str, char c);
 		static int IndexOf(const std::string& str, const std::string& search);
+		static int CodePointAt(const std::string& str, unsigned int index);
 		static void LeftTrim(std::string& str);
 		static void RightTrim(std::string& str);
 		static void Trim(std::string& str);
@@ -58,7 +65,7 @@ namespace Damian
 	char String::CharAt(const std::string& str, int index)
 	{
 		char tempChar = '\0';
-		if(index < static_cast<int>(str.size()) && index > 0)
+		if (index < static_cast<int>(str.size()) && index > 0)
 		{
 			tempChar = static_cast<char>(str.at(index));
 		}
@@ -68,11 +75,11 @@ namespace Damian
 
 	char String::CharAt(const char* str, int index)
 	{
-		if(index < static_cast<int>(std::strlen(str)) && index > 0)
+		if (index < static_cast<int>(std::strlen(str)) && index > 0)
 		{
-			for(size_t i = 0; i < std::strlen(str); i++)
+			for (size_t i = 0; i < std::strlen(str); i++)
 			{
-				if(str[i] == str[index])
+				if (str[i] == str[index])
 				{
 					return str[index];
 				}
@@ -84,7 +91,7 @@ namespace Damian
 
 	void String::ToUpper(std::string& str)
 	{
-		for(size_t i = 0; i < str.size(); i++)
+		for (size_t i = 0; i < str.size(); i++)
 		{
 			str.at(i) = std::toupper(str.at(i));
 		}
@@ -92,7 +99,7 @@ namespace Damian
 
 	void String::ToLower(std::string& str)
 	{
-		for(size_t i = 0; i < str.size(); i++)
+		for (size_t i = 0; i < str.size(); i++)
 		{
 			str.at(i) = std::tolower(str.at(i));
 		}
@@ -109,13 +116,44 @@ namespace Damian
 		va_list strList;
 
 		va_start(strList, count);
-		for(int arg = 0; arg < count; ++arg)
+		for (int arg = 0; arg < count; ++arg)
 		{
 			_temp += va_arg(strList, std::string);
 		}
 		va_end(strList);
 
 		str = _temp;
+	}
+
+	void String::Join(std::string& str, const char* delimiter, const std::vector<std::string>& strArr)
+	{
+		for (int i = 0; i < strArr.size(); ++i)
+		{
+			str.append(strArr.at(i).c_str()).append(delimiter);
+		}
+	}
+
+	void String::Insert(std::string& str, int offset, const std::string& str2)
+	{
+		try
+		{
+			str.reserve(str.length() + str2.length() + 2);
+			str.insert(*(str.begin() + offset), str2.c_str());
+		}
+		catch (std::exception e)
+		{
+			PRINT_ERR("Error: inserting string into a string: " + std::string(e.what()));
+		}
+	}
+
+	int String::CodePointAt(const std::string& str, unsigned int index)
+	{
+		if (index > 0 && index <= str.length())
+		{
+			return (int)str.at(index);
+		}
+
+		return -1;
 	}
 
 	int String::IndexOf(const std::string& str, char c)
@@ -152,9 +190,9 @@ namespace Damian
 	bool String::EndsWith(const std::string& mainStr, const std::string& str)
 	{
 		int index = static_cast<int>(mainStr.find(str));
-		if(index != -1)
+		if (index != -1)
 		{
-			if(str.length() + index == mainStr.length())
+			if (str.length() + index == mainStr.length())
 				return true;
 			else
 				return false;

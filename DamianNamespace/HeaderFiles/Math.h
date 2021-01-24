@@ -1,7 +1,9 @@
+#pragma once
+
 #ifndef DAMIAN_MATH_H
 #define DAMIAN_MATH_H
 
-#include "functions.h"
+#include "Functions.h"
 
 #include <typeinfo>
 #include <limits>
@@ -29,7 +31,52 @@ namespace Damian {
 
 		const std::string& GetTag() const { return m_Tag; }
 		void SetTag(const std::string& tag) { m_Tag = tag; }
+
+		Point2D& operator+=(const Point2D& point)
+		{
+			m_X += point.m_X;
+			m_Y += point.m_Y;
+
+			return *this;
+		}
+
+		Point2D& operator-=(const Point2D& point)
+		{
+			m_X -= point.m_X;
+			m_Y -= point.m_Y;
+
+			return *this;
+		}
+
+		friend Point2D operator+(const Point2D& point1, const Point2D& point2);
+		friend Point2D operator-(const Point2D& point1, const Point2D& point2);
+		friend bool operator==(const Point2D& point1, const Point2D& point2);
+		friend bool operator!=(const Point2D& point1, const Point2D& point2);
 	};
+
+	Point2D operator+(const Point2D& point1, const Point2D& point2)
+	{
+		Point2D _temp{ point1 };
+		_temp += point2;
+		return _temp;
+	}
+
+	Point2D operator-(const Point2D& point1, const Point2D& point2)
+	{
+		Point2D _temp{ point1 };
+		_temp -= point2;
+		return _temp;
+	}
+
+	bool operator==(const Point2D& point1, const Point2D& point2)
+	{
+		return point1.m_X == point2.m_X && point1.m_Y == point2.m_Y;
+	}
+
+	bool operator!=(const Point2D& point1, const Point2D& point2)
+	{
+		return point1 != point2;
+	}
 
 	class Point3D
 	{
@@ -69,12 +116,15 @@ namespace Damian {
 		static numeric_Type Pow(numeric_Type base, numeric_Type exponent);
 		static numeric_Type Sqrt(numeric_Type number);
 		static numeric_Type Distance(const Point2D& a, const Point2D& b);
+		static numeric_Type Permutation(numeric_Type n, numeric_Type k);
+		static numeric_Type Combination(numeric_Type n, numeric_Type k);
+		static numeric_Type Factorial(numeric_Type n);
 	};
 
 	numeric_Type Math::GetGCD(numeric_Type a, numeric_Type b)
 	{
 		int l_a = 0, l_b = 0;
-		if(Type(MIN_NUM) != Type(MIN_INT))
+		if (Type(MIN_NUM) != Type(MIN_INT))
 		{
 			l_a = static_cast<int>(a);
 			l_b = static_cast<int>(b);
@@ -121,6 +171,76 @@ namespace Damian {
 	numeric_Type Math::Distance(const Point2D& a, const Point2D& b)
 	{
 		return Sqrt(Pow((a.GetX() - b.GetX()), 2) + Pow((a.GetY() - b.GetY()), 2));
+	}
+
+	numeric_Type Math::Factorial(numeric_Type n)
+	{
+		try
+		{
+			numeric_Type result = 1;
+
+			if (n > 0)
+				result = n * Factorial(n - 1);
+
+			return result;
+		}
+		catch (std::exception e)
+		{
+			PRINT_ERR("Error: cannot calculate numbers: " + std::string(e.what()));
+			return 0;
+		}
+
+		return 0;
+	}
+
+	numeric_Type Math::Permutation(numeric_Type n, numeric_Type k)
+	{
+		try
+		{
+			numeric_Type result = 1;
+
+			for (numeric_Type i = 0; i < n; ++i)
+			{
+				result *= (n - i);
+			}
+
+			for (numeric_Type i = 1; i <= (n - k); ++i)
+			{
+				result /= i;
+			}
+
+			return result;
+		}
+		catch (std::exception e)
+		{
+			PRINT_ERR("Error: cannot calculate numbers: " + std::string(e.what()));
+			return 0;
+		}
+	}
+
+	numeric_Type Math::Combination(numeric_Type n, numeric_Type k)
+	{
+		try
+		{
+			numeric_Type result = 1;
+
+			for (numeric_Type i = 0; i < n; ++i)
+			{
+				result *= (n - i);
+			}
+
+			for (numeric_Type i = 1; i <= k; ++i)
+			{
+				result /= i;
+			}
+
+			return result;
+		}
+		catch (std::exception e)
+		{
+			PRINT_ERR("Error: cannot calculate numbers: " + std::string(e.what()));
+			return 0;
+		}
 	}
 }
 
