@@ -72,7 +72,7 @@ int main()
 	Print(Type("Hello"));
 	Print(Math::Distance(Point2D{4, 6}, Point2D{-5, -2}));
 	Print(Math::Factorial(5));
-	Print(Math::Permutation(190, 2));
+	Print(Math::Permutation(20000, 2));
 	Print(ToInt(45.3445));
 	Print(ToFloat(45.3445));
 
@@ -81,6 +81,24 @@ int main()
 	Print(myName);
 	String::Insert(myName, 3, "Hello, World!");
 	Print(myName);
+
+	Number num1 = 23;
+	Number num2 = 17;
+	Print(num2 - num1);
+
+	//num1 = Input<Number>("Enter a number: ");
+	Print(++num1);
+
+	Print(ToChar(10));
+
+	PrintF("ssi", "Hello, World! ", "Damian ", 20);
+	PrintF("iid", 12, 14, 45.9);
+
+	Print("Hello,", "World", "Guys");
+
+	auto myList = List<const char*>(3, "Damian", "Chamel", "Rodrigo");
+	for (auto s : myList)
+		Print(s);
 
 	return 0;
 }

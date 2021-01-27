@@ -3,6 +3,11 @@
 #ifndef DAMIAN_FUNCTIONS_H
 #define DAMIAN_FUNCTIONS_H
 
+#include "String.h"
+#include "Timer.h"
+#include "Commons.h"
+
+#include <cstdarg>
 #include <iostream>
 #include <iomanip>
 #include <vector>
@@ -18,22 +23,8 @@
 #include <array>
 #include <sstream>
 
-#include "String.h"
-#include "Timer.h"
-
 namespace Damian
 {
-#if OS_VERSION == windows
-	constexpr char line_delim = '\n';
-#elif OS_VERSION == linux
-	constexpr char line_delim = '\r';
-#endif
-
-#define D_ASSERT(condition, msg) if(condition)\
-	std::cerr << line_delim << msg << line_delim << std::endl
-
-#define PRINT_ERR(msg) D_ASSERT(true, msg)
-
 	/* Convert generic type to C++ standard string type
 	 * bit explain: this is done by using stringstreams
 	 */
@@ -43,6 +34,13 @@ namespace Damian
 		std::ostringstream output;
 		output << value;
 		return output.str();
+	}
+
+	/* Convert int to char
+	 */
+	char ToChar(int chr)
+	{
+		return static_cast<char>(chr);
 	}
 
 	/* Convert generic type to integer type
@@ -126,7 +124,7 @@ namespace Damian
 	template<typename T>
 	T Sum(int count, T* arr)
 	{
-		T sum = 0.0;
+		T sum = 0;
 		for (int i = 0; i < count; i++)
 		{
 			sum += arr[i];
@@ -176,6 +174,25 @@ namespace Damian
 		}
 	}
 
+	/* List(count, objects...) function creates a std::vector<type>
+	 * quickly as possible
+	 */
+	template<typename T>
+	std::vector<T> List(int count = 10, ...)
+	{
+		T start;
+		std::vector<T> _tempVec{ count };
+		va_list list;
+		va_start(list, start);
+		for (int i = 0; i < count; ++i)
+		{
+			_tempVec.push_back(va_arg(i, T));
+		}
+		va_end(list);
+
+		return _tempVec;
+	}
+
 	/* Returns default name of the type specified
 	 * eg:
 	 * int[] arr = { 1, 2, 3 };
@@ -188,6 +205,30 @@ namespace Damian
 		return static_cast<const char*>(typeid(type).name());
 	}
 
+	/* Getting data from C++ standard input stream
+	 * and return it. Print message to console if provided
+	 */
+	template<typename OutputType = std::string>
+	OutputType Input(const char* msg = nullptr)
+	{
+		if (msg != nullptr)
+			std::cout << msg;
+
+		OutputType _temp = 0;
+
+		if (std::cin.fail())
+		{
+			std::cin.clear();
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			PRINT_ERR("Error::something went wrong with input stream!");
+		}
+		else
+		{
+			std::cin >> _temp;
+		}
+		return _temp;
+	}
+
 	/* Print function for normal objects
 	 */
 	template<typename T>
@@ -196,16 +237,89 @@ namespace Damian
 		std::cout << std::boolalpha << obj << line_delim;
 	}
 
+	/* Print function for strings only
+	 */
+	void Print(const char* str1, const char* str2 = "", const char* str3 = "",
+		const char* str4 = "", const char* str5 = "", const char* str6 = "",
+		const char* str7 = "", const char* str8 = "", const char* str9 = "",
+		const char* str10 = "")
+	{
+		if (std::strlen(str1) > 0)
+			std::cout << str1;
+		if (std::strlen(str2) > 0)
+			std::cout << " " << str2;
+		if (std::strlen(str3) > 0)
+			std::cout << " " << str3;
+		if (std::strlen(str4) > 0)
+			std::cout << " " << str4;
+		if (std::strlen(str5) > 0)
+			std::cout << " " << str5;
+		if (std::strlen(str6) > 0)
+			std::cout << " " << str6;
+		if (std::strlen(str7) > 0)
+			std::cout << " " << str7;
+		if (std::strlen(str8) > 0)
+			std::cout << " " << str8;
+		if (std::strlen(str9) > 0)
+			std::cout << " " << str9;
+		if (std::strlen(str10) > 0)
+			std::cout << " " << str10;
+	}
+
+	/* Print function for formatted strings
+	 */
+	void PrintF(const std::string& decoder, ...)
+	{
+		if (decoder.empty() || decoder.size() == 0)
+		{
+			PRINT_ERR("ERROR::decoder cannot be empty or null");
+			return;
+		}
+
+		std::stringstream stringStream;
+
+		va_list list;
+		va_start(list, decoder);
+		int count = 0;
+		int decoderLength = static_cast<int>(decoder.length());
+
+		while (true)
+		{
+			char codeType = (count < decoderLength) ? decoder.at(count) : '\0';
+			switch (codeType)
+			{
+			default:
+			case '\0':
+				va_end(list); // clear the list
+				Print(stringStream.str());
+				return;
+
+			case 'i':
+				stringStream << va_arg(list, int);
+				count++;
+				break;
+			case 'd':
+				stringStream << va_arg(list, double);
+				count++;
+				break;
+			case 's':
+				stringStream << va_arg(list, const char*);
+				count++;
+				break;
+			}
+		}
+	}
+
 	/* void Print(int count = 0, T* arr = nullptr)
 	 * count - elements count in arr
 	 * arr - elements holder
 	 * Print function for arrays
 	 */
-	template<typename T>
+	template<typename T = const char*>
 	void Print(int count = 0, T* arr = nullptr)
 	{
-		D_ASSERT(count == 0, "ERROR::Array size could not be 0");
-		D_ASSERT(arr == nullptr, "ERROR::Array could not be null");
+		D_ASSERT(count == 0, "ERROR::array size could not be 0");
+		D_ASSERT(arr == nullptr, "ERROR::array could not be null");
 
 		std::cout << "{ ";
 		for (int i = 0; i < count; ++i)

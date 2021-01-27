@@ -4,12 +4,14 @@
 #define DAMIAN_STRING_H
 
 #include "Functions.h"
+#include "Commons.h"
 
 #include <string>
 #include <cstring> // strlen
 #include <cctype> // tolower, toupper
 #include <cstdarg> // va_list, va_start, va_end, va_arg
 #include <algorithm> // find_if
+#include <vector>
 
 #if __cplusplus >= 2017091L
 #include <string_view>
@@ -127,7 +129,7 @@ namespace Damian
 
 	void String::Join(std::string& str, const char* delimiter, const std::vector<std::string>& strArr)
 	{
-		for (int i = 0; i < strArr.size(); ++i)
+		for (int i = 0; i < static_cast<int>(strArr.size()); ++i)
 		{
 			str.append(strArr.at(i).c_str()).append(delimiter);
 		}
@@ -135,15 +137,10 @@ namespace Damian
 
 	void String::Insert(std::string& str, int offset, const std::string& str2)
 	{
-		try
-		{
-			str.reserve(str.length() + str2.length() + 2);
-			str.insert(*(str.begin() + offset), str2.c_str());
-		}
-		catch (std::exception e)
-		{
-			PRINT_ERR("Error: inserting string into a string: " + std::string(e.what()));
-		}
+		std::string _before = str.substr(0, offset);
+		std::string _after = str.substr(offset, str.size() - offset);
+		std::string _temp = _before + str2 + _after;
+		str = _temp;
 	}
 
 	int String::CodePointAt(const std::string& str, unsigned int index)
